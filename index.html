@@ -50,6 +50,7 @@
     letter-spacing: .04em;
   }
   .nav-logo span { color: var(--teal); }
+  .nav-right { display: flex; align-items: center; gap: 1.75rem; }
   .nav-links { display: flex; gap: 2rem; }
   .nav-links a {
     color: rgba(255,255,255,.65);
@@ -61,6 +62,25 @@
     transition: color .2s;
   }
   .nav-links a:hover { color: var(--white); }
+
+  .btn-apresentar {
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: .5rem 1.1rem;
+    border-radius: 8px;
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    font-family: inherit;
+    transition: background .2s, transform .15s;
+  }
+  .btn-apresentar:hover { background: #00c28a; transform: translateY(-1px); }
+  .btn-apresentar svg { width: 11px; height: 11px; flex-shrink: 0; }
 
   /* ── HERO ── */
   .hero {
@@ -297,17 +317,173 @@
     .kpi-strip { gap: .75rem; }
     .kpi { min-width: 130px; padding: .9rem 1.2rem; }
   }
+
+  /* ════════════════════════════════════════════════════════════════
+     MODO APRESENTAÇÃO
+     ════════════════════════════════════════════════════════════════ */
+
+  #pres-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, #16273F 0%, #0D1825 70%);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+  }
+  #pres-overlay.open { display: flex; }
+  body.pres-lock { overflow: hidden; }
+
+  .pres-progress-track {
+    position: absolute; top: 0; left: 0; height: 3px; width: 100%;
+    background: rgba(255,255,255,.06); z-index: 2;
+  }
+  .pres-progress-fill { height: 100%; background: var(--teal); width: 9.09%; transition: width .45s cubic-bezier(.4,0,.2,1); }
+
+  .pres-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 1.75rem 0;
+  }
+  .pres-counter { color: rgba(255,255,255,.45); font-size: .74rem; letter-spacing: .1em; font-variant-numeric: tabular-nums; }
+  .pres-exit {
+    background: none; border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.65);
+    width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: .95rem; line-height: 1;
+    transition: .2s;
+  }
+  .pres-exit:hover { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.35); }
+
+  .pres-stage { flex: 1; position: relative; overflow: hidden; }
+
+  .pslide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 1.5rem 4rem;
+    opacity: 0;
+    transform: translateY(26px) scale(.985);
+    pointer-events: none;
+    transition: opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1);
+    text-align: center;
+  }
+  .pslide.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+  .pslide-eyebrow {
+    color: var(--teal); font-size: .72rem; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; margin-bottom: .9rem;
+  }
+  .pslide-title {
+    color: #fff; font-size: clamp(1.5rem, 3.1vw, 2.5rem); font-weight: 800; line-height: 1.22;
+    max-width: 860px;
+  }
+  .pslide-takeaway {
+    color: rgba(255,255,255,.58); font-size: .98rem; font-style: italic; max-width: 620px;
+    margin: .9rem auto 0; line-height: 1.65;
+  }
+  .pslide-body { margin-top: 2rem; width: 100%; max-width: 920px; }
+
+  .pres-bottombar { display: flex; align-items: center; justify-content: center; gap: 1.4rem; padding: 1rem 0 1.6rem; }
+  .pres-arrow {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.16); color: #fff;
+    width: 38px; height: 38px; border-radius: 50%; cursor: pointer; font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center; transition: .2s;
+  }
+  .pres-arrow:hover:not(:disabled) { background: var(--teal); border-color: var(--teal); }
+  .pres-arrow:disabled { opacity: .2; cursor: default; }
+  .pres-dots { display: flex; gap: .4rem; }
+  .pres-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.18); cursor: pointer; transition: .2s; }
+  .pres-dot.active { background: var(--teal); width: 18px; border-radius: 4px; }
+  .pres-dot:hover { background: rgba(255,255,255,.4); }
+
+  .pres-chart-wrap { position: relative; height: 280px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 1.2rem; }
+
+  .pres-hero-number {
+    font-size: clamp(3.2rem, 8.5vw, 6.5rem); font-weight: 800; color: var(--teal); line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .pres-hero-label { color: rgba(255,255,255,.5); font-size: .85rem; text-transform: uppercase; letter-spacing: .1em; margin-top: .7rem; }
+  .pres-hero-sub { color: rgba(255,255,255,.4); font-size: .85rem; margin-top: .4rem; }
+
+  .pres-chips { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; margin-top: 1.1rem; }
+  .pres-chip {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.8);
+    font-size: .78rem; padding: .4rem .85rem; border-radius: 999px;
+  }
+  .pres-chip.up { color: #5fe0b2; }
+  .pres-chip.down { color: #ff9a7a; }
+
+  .pres-formula {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 14px;
+    padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: .5rem; align-items: center;
+  }
+  .pres-formula-row { color: rgba(255,255,255,.75); font-size: .95rem; font-variant-numeric: tabular-nums; }
+  .pres-formula-row.result { color: var(--teal); font-weight: 700; font-size: 1.15rem; margin-top: .3rem; }
+  .pres-formula-arrow { color: rgba(255,255,255,.25); font-size: 1.1rem; }
+
+  .pres-vol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; text-align: left; }
+  .pres-vol-col h5 { color: rgba(255,255,255,.5); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .9rem; }
+  .pres-vol-row { margin: .6rem 0; }
+  .pres-vol-label { display: flex; justify-content: space-between; font-size: .82rem; color: rgba(255,255,255,.75); margin-bottom: .25rem; }
+  .pres-vol-track { background: rgba(255,255,255,.08); border-radius: 4px; height: 7px; overflow: hidden; }
+  .pres-vol-fill { height: 100%; border-radius: 4px; }
+
+  .pres-stat-row { display: flex; align-items: center; justify-content: center; gap: 1.3rem; flex-wrap: wrap; }
+  .pres-stat-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 1.5rem 1.9rem; min-width: 160px; }
+  .pres-stat-val { font-size: 2rem; font-weight: 800; color: #fff; }
+  .pres-stat-val.teal { color: var(--teal); }
+  .pres-stat-val.orange { color: var(--orange); }
+  .pres-stat-label { font-size: .68rem; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: .08em; margin-top: .4rem; }
+  .pres-stat-arrow { color: rgba(255,255,255,.25); font-size: 1.4rem; }
+
+  .pres-channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; width: 100%; }
+  .pres-channel-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: 1.2rem 1.1rem; text-align: left; }
+  .pres-channel-num { color: var(--teal); font-size: .68rem; font-weight: 700; letter-spacing: .06em; }
+  .pres-channel-card h4 { color: #fff; font-size: .92rem; margin: .45rem 0 .5rem; line-height: 1.3; }
+  .pres-channel-card p { color: rgba(255,255,255,.5); font-size: .76rem; line-height: 1.55; }
+
+  .pres-table { width: 100%; max-width: 580px; margin: 0 auto; border-collapse: collapse; }
+  .pres-table th { color: rgba(255,255,255,.45); font-size: .68rem; text-transform: uppercase; letter-spacing: .07em; padding: .6rem .9rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,.15); }
+  .pres-table td { color: #fff; padding: .8rem .9rem; border-bottom: 1px solid rgba(255,255,255,.07); font-size: .9rem; text-align: left; }
+  .pres-priority-badge {
+    display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+    border-radius: 50%; background: var(--teal); color: #0D1825; font-weight: 800; font-size: .74rem;
+  }
+  .pres-impact-tag { font-size: .8rem; font-weight: 600; }
+  .pres-impact-tag.alto { color: #5fe0b2; }
+  .pres-impact-tag.medio { color: #ffb27a; }
+
+  .pres-checklist { display: flex; flex-direction: column; gap: .85rem; text-align: left; max-width: 480px; margin: 0 auto; }
+  .pres-check-item { display: flex; align-items: flex-start; gap: .7rem; color: #fff; font-size: .98rem; line-height: 1.4; }
+  .pres-check-item .ic { color: var(--teal); font-size: 1.05rem; margin-top: .05rem; }
+  .pres-closing-line {
+    margin-top: 1.6rem; color: rgba(255,255,255,.6); font-style: italic; font-size: .95rem;
+    max-width: 560px; line-height: 1.65;
+  }
+  .pres-thanks { color: var(--teal); font-size: 1rem; font-weight: 700; margin-top: 1.8rem; letter-spacing: .04em; }
+
+  .pres-hint { color: rgba(255,255,255,.3); font-size: .76rem; margin-top: 2.2rem; }
+
+  @media (max-width: 760px) {
+    .pslide { padding: 1.25rem 1.5rem; }
+    .pres-vol-grid, .pres-channel-grid { grid-template-columns: 1fr; }
+    .pres-stat-row { flex-direction: column; }
+    .pres-stat-arrow { transform: rotate(90deg); }
+  }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-logo"><img src="contabilizei.png" alt="Contabilizei" style="height:42px;vertical-align:middle;"> <span>·</span> Case 2026</div>
-  <div class="nav-links">
-    <a href="#p1">Projeção</a>
-    <a href="#p2">Incerteza</a>
-    <a href="#p3">Market Share</a>
-    <a href="#p4">Estratégia</a>
+  <div class="nav-logo">Contabilizei <span>·</span> Case 2026</div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#p1">Projeção</a>
+      <a href="#p2">Incerteza</a>
+      <a href="#p3">Market Share</a>
+      <a href="#p4">Estratégia</a>
+    </div>
+    <button id="btnApresentar" class="btn-apresentar">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg>
+      Apresentar
+    </button>
   </div>
 </nav>
 
@@ -395,7 +571,7 @@
 <section class="section" id="p2">
   <div class="section-header">
     <span class="section-tag blue">P2</span>
-    <h2 class="section-title">Comportamento Histórico dos Dados</h2>
+    <h2 class="section-title">Diagnóstico de Incerteza do Modelo</h2>
   </div>
 
   <div class="grid-2">
@@ -489,39 +665,44 @@
 <section class="section" id="p4">
   <div class="section-header">
     <span class="section-tag">P4</span>
-    <h2 class="section-title">Oportunidades Identificadas</h2>
+    <h2 class="section-title">Estratégia de Aquisição</h2>
   </div>
 
   <div class="strategy-grid">
 
     <div class="strat-card">
-      <div class="strat-card-num">01</div>
-      <h4>Foco nos segmentos com maior volume</h4>
-      <p>Os segmentos de TI/DEV, Mídia & Marketing e Apoio Administrativo apresentaram os maiores volumes ao longo da série histórica. Por isso, podem ser considerados os principais públicos para aquisição de clientes.</p>
+      <div class="strat-card-num">01 · Prioridade alta</div>
+      <h4>Capturar os segmentos em aceleração</h4>
+      <p>TI/DEV, Mídia & Marketing e Apoio Adm são os três maiores segmentos por volume e os que mais cresceram. O conteúdo da Contabilizei já fala com esse público — campanhas pagas (Google, LinkedIn) segmentadas por CNAE amplificam a conversão.</p>
+      <span class="strat-pill">Google Ads</span><span class="strat-pill">LinkedIn</span><span class="strat-pill">CNAE targeting</span>
     </div>
 
     <div class="strat-card">
-      <div class="strat-card-num">02</div>
-      <h4>Potencial em outras capitais</h4>
-      <p>Belo Horizonte, Curitiba e Porto Alegre possuem volumes relevantes de abertura de empresas. Isso indica oportunidades de crescimento além dos mercados mais tradicionais.</p>
+      <div class="strat-card-num">02 · Prioridade alta</div>
+      <h4>Explorar cidades fora do eixo SP-RJ</h4>
+      <p>BH, Curitiba e Porto Alegre somam ~261 mil empresas no histórico mas têm menor penetração estimada da Contabilizei. Landing pages e conteúdo geo-localizado, parcerias com associações regionais e SEO local ("abrir empresa em Curitiba") são alavancas de baixo custo.</p>
+      <span class="strat-pill">SEO local</span><span class="strat-pill">Parcerias regionais</span>
     </div>
 
     <div class="strat-card">
-      <div class="strat-card-num">03</div>
-      <h4>Investir em conteúdo informativo</h4>
-      <p>Muitos empreendedores buscam informações antes de abrir uma empresa. Produzir conteúdos e ferramentas de apoio pode ajudar a atrair potenciais clientes durante essa etapa.</p>
+      <div class="strat-card-num">03 · Prioridade média</div>
+      <h4>Educação no topo do funil (TOFU)</h4>
+      <p>A Contabilizei já produz conteúdo educativo. A oportunidade é criar calculadoras e ferramentas interativas ("quanto custa abrir minha empresa?") que capturem e-mails antes da decisão de compra — reduzindo custo de aquisição no fundo do funil.</p>
+      <span class="strat-pill">Ferramentas gratuitas</span><span class="strat-pill">Blog / SEO</span>
     </div>
 
     <div class="strat-card">
-      <div class="strat-card-num">04</div>
-      <h4>Aproveitar períodos de maior demanda</h4>
-      <p>Os meses de março, julho e outubro apresentaram maior volume de aberturas. Esses períodos podem receber maior atenção em ações de divulgação e aquisição.</p>
+      <div class="strat-card-num">04 · Prioridade média</div>
+      <h4>Calendário sazonal de investimento</h4>
+      <p>Mar, Jul e Out concentram mais de 27% das aberturas anuais. Concentrar budget de mídia paga nesses meses aumenta o retorno sobre o investimento. Dez e Nov devem ter budget reduzido — o mercado cai naturalmente nesses períodos.</p>
+      <span class="strat-pill">Sazonalidade</span><span class="strat-pill">Media planning</span>
     </div>
 
   </div>
 
   <div class="insight" style="margin-top:1.5rem">
-    <strong>Conclusão:</strong> A análise indica que os maiores potenciais de crescimento estão nos segmentos com maior volume histórico, em cidades fora do eixo principal e nos meses que tradicionalmente concentram mais aberturas de empresas.
+    <strong>Nota metodológica:</strong> a análise da estratégia é baseada nos dados da série histórica fornecida e em observação pública da presença digital da Contabilizei.
+    As recomendações partem do que os dados mostram — segmentos em crescimento, concentração geográfica e padrões sazonais — não de sugestões genéricas de marketing digital.
   </div>
 </section>
 
@@ -530,6 +711,212 @@
 <footer>
   Case Analítico · Contabilizei · Projeção 2026 · Uso Interno
 </footer>
+
+<!-- ════════════════════════════════════════════════════════════════
+     OVERLAY DE APRESENTAÇÃO — 11 SLIDES, STORYTELLING
+     ════════════════════════════════════════════════════════════════ -->
+<div id="pres-overlay">
+  <div class="pres-progress-track"><div class="pres-progress-fill" id="presProgress"></div></div>
+
+  <div class="pres-topbar">
+    <div class="pres-counter" id="presCounter">01 / 11</div>
+    <button class="pres-exit" id="presExit" title="Fechar (Esc)">✕</button>
+  </div>
+
+  <div class="pres-stage">
+
+    <!-- SLIDE 1 — A MISSÃO -->
+    <div class="pslide" data-idx="0">
+      <div class="pslide-eyebrow">A missão</div>
+      <h2 class="pslide-title">Como a Contabilizei pode alcançar 20% do mercado de abertura de empresas em 2026?</h2>
+      <p class="pslide-takeaway">Recebi um desafio que parece simples: projetar o mercado de abertura de empresas para 2026. Mas a pergunta de verdade por trás dos números é outra — existe mercado suficiente para a Contabilizei crescer? E como conquistar essa fatia?</p>
+      <p class="pres-hint">Use as setas do teclado (← →) ou os botões abaixo para navegar</p>
+    </div>
+
+    <!-- SLIDE 2 — ENTENDENDO O MERCADO -->
+    <div class="pslide" data-idx="1">
+      <div class="pslide-eyebrow">Entendendo o mercado</div>
+      <h2 class="pslide-title">O mercado está crescendo?</h2>
+      <p class="pslide-takeaway">Antes de prever o futuro, precisei entender o passado. Analisei oito anos de histórico para identificar tendências, sazonalidade e mudanças de comportamento.</p>
+      <div class="pslide-body">
+        <div class="pres-chart-wrap"><canvas id="pChartAnual"></canvas></div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 — O QUE OS DADOS REVELAM -->
+    <div class="pslide" data-idx="2">
+      <div class="pslide-eyebrow">O que os dados revelam</div>
+      <h2 class="pslide-title">Existem padrões claros ao longo do ano</h2>
+      <p class="pslide-takeaway">Apesar das oscilações naturais, o mercado mostra um crescimento consistente e uma sazonalidade que se repete ano após ano.</p>
+      <div class="pslide-body">
+        <div class="pres-chart-wrap" style="height:220px"><canvas id="pChartMensal"></canvas></div>
+        <div class="pres-chips">
+          <span class="pres-chip up">🔥 Meses fortes: Março, Julho e Outubro</span>
+          <span class="pres-chip down">📉 Mês mais fraco: Dezembro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 — CONSTRUINDO O FUTURO -->
+    <div class="pslide" data-idx="3">
+      <div class="pslide-eyebrow">Construindo o futuro</div>
+      <h2 class="pslide-title">Como estimei 2026</h2>
+      <p class="pslide-takeaway">Nenhum modelo prevê o futuro com perfeição. O objetivo foi montar uma projeção simples, robusta e fácil de explicar — usando o comportamento mais recente do mercado como referência principal.</p>
+      <div class="pslide-body">
+        <div class="pres-formula">
+          <div class="pres-formula-row">Crescimento de 2024 → 2025: <strong style="color:#fff">+16,3%</strong></div>
+          <div class="pres-formula-row">Crescimento de 2023 → 2024: <strong style="color:#fff">+20,0%</strong></div>
+          <div class="pres-formula-arrow">↓ média simples ↓</div>
+          <div class="pres-formula-row">Taxa aplicada a 2026: <strong style="color:#fff">+18,1%</strong></div>
+          <div class="pres-formula-arrow">↓</div>
+          <div class="pres-formula-row result">335.196 (2025) × 1,181 = 395.933 (2026)</div>
+        </div>
+        <div class="pres-chips">
+          <span class="pres-chip">Conservador (−5%): 376.136</span>
+          <span class="pres-chip">Estressado (−10%): 356.340</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 — O MERCADO DE 2026 (HERO) -->
+    <div class="pslide" data-idx="4">
+      <div class="pslide-eyebrow">O mercado de 2026</div>
+      <h2 class="pslide-title">Minha projeção para 2026</h2>
+      <div class="pslide-body">
+        <div class="pres-hero-number" id="presNum5">0</div>
+        <div class="pres-hero-label">novas empresas abertas em 2026</div>
+        <div class="pres-hero-sub">+18,1% em relação a 2025 (335.196 empresas)</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6 — ONDE O MODELO ERRA -->
+    <div class="pslide" data-idx="5">
+      <div class="pslide-eyebrow">Nem tudo é previsível</div>
+      <h2 class="pslide-title">Onde o modelo erra mais</h2>
+      <p class="pslide-takeaway">Os dados também mostram onde é preciso ter cautela. Alguns setores e cidades têm volatilidade alta — e isso muda como eu confio na projeção em cada recorte.</p>
+      <div class="pslide-body">
+        <div class="pres-vol-grid">
+          <div class="pres-vol-col">
+            <h5>Cidades mais voláteis</h5>
+            <div id="presVolCidade"></div>
+          </div>
+          <div class="pres-vol-col">
+            <h5>Setores mais voláteis</h5>
+            <div id="presVolSegmento"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 — TRANSFORMANDO MERCADO EM META -->
+    <div class="pslide" data-idx="6">
+      <div class="pslide-eyebrow">Da estatística para a meta</div>
+      <h2 class="pslide-title">Quanto a Contabilizei precisa vender?</h2>
+      <div class="pslide-body">
+        <div class="pres-stat-row">
+          <div class="pres-stat-card">
+            <div class="pres-stat-val">395.933</div>
+            <div class="pres-stat-label">Mercado total</div>
+          </div>
+          <div class="pres-stat-arrow">→</div>
+          <div class="pres-stat-card">
+            <div class="pres-stat-val orange">20%</div>
+            <div class="pres-stat-label">Meta de market share</div>
+          </div>
+          <div class="pres-stat-arrow">→</div>
+          <div class="pres-stat-card">
+            <div class="pres-stat-val teal">79.186</div>
+            <div class="pres-stat-label">Vendas necessárias</div>
+          </div>
+        </div>
+        <p class="pslide-takeaway" style="margin-top:1.6rem">A pergunta deixa de ser sobre estatística e passa a ser sobre operação: quantos clientes a gente precisa conquistar?</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 8 — O DESAFIO REAL -->
+    <div class="pslide" data-idx="7">
+      <div class="pslide-eyebrow">O desafio real</div>
+      <h2 class="pslide-title">Conquistar mais de 79 mil empreendedores</h2>
+      <div class="pslide-body">
+        <div class="pres-hero-number" id="presNum8" style="color:var(--orange)">0</div>
+        <div class="pres-hero-label">pessoas decidindo formalizar o próprio negócio</div>
+      </div>
+      <p class="pslide-takeaway" style="margin-top:1.6rem">Esses 79 mil não são só números numa planilha. São empreendedores tomando uma decisão importante — e a Contabilizei pode estar do lado deles nesse momento.</p>
+    </div>
+
+    <!-- SLIDE 9 — COMO CHEGAR LÁ -->
+    <div class="pslide" data-idx="8">
+      <div class="pslide-eyebrow">Como chegar lá</div>
+      <h2 class="pslide-title">O plano de aquisição</h2>
+      <p class="pslide-takeaway">Olhando os segmentos em crescimento, as cidades menos exploradas e a sazonalidade do mercado, encontrei quatro frentes prioritárias.</p>
+      <div class="pslide-body">
+        <div class="pres-channel-grid">
+          <div class="pres-channel-card">
+            <div class="pres-channel-num">Google Ads</div>
+            <h4>Mídia paga por segmento</h4>
+            <p>Campanhas segmentadas por CNAE nos setores que mais crescem: TI/DEV, Mídia e Apoio Adm.</p>
+          </div>
+          <div class="pres-channel-card">
+            <div class="pres-channel-num">SEO</div>
+            <h4>Conteúdo local</h4>
+            <p>Páginas e artigos para BH, Curitiba e Porto Alegre — cidades fortes e ainda pouco exploradas.</p>
+          </div>
+          <div class="pres-channel-card">
+            <div class="pres-channel-num">Parcerias</div>
+            <h4>Associações regionais</h4>
+            <p>Parcerias locais nessas mesmas cidades para gerar confiança e indicação de boca a boca.</p>
+          </div>
+          <div class="pres-channel-card">
+            <div class="pres-channel-num">CRM e Remarketing</div>
+            <h4>Calendário sazonal</h4>
+            <p>Reforçar contato antes dos meses fortes (Mar, Jul, Out) e reengajar nos meses mais fracos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10 — PRIORIZAÇÃO -->
+    <div class="pslide" data-idx="9">
+      <div class="pslide-eyebrow">Priorização</div>
+      <h2 class="pslide-title">Onde investir primeiro</h2>
+      <div class="pslide-body">
+        <table class="pres-table">
+          <thead>
+            <tr><th>Canal</th><th>Impacto</th><th>Prioridade</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Google Ads</td><td class="pres-impact-tag alto">Alto</td><td><span class="pres-priority-badge">1</span></td></tr>
+            <tr><td>SEO</td><td class="pres-impact-tag alto">Alto</td><td><span class="pres-priority-badge">2</span></td></tr>
+            <tr><td>Parcerias</td><td class="pres-impact-tag medio">Médio</td><td><span class="pres-priority-badge">3</span></td></tr>
+            <tr><td>CRM e Remarketing</td><td class="pres-impact-tag medio">Médio</td><td><span class="pres-priority-badge">4</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SLIDE 11 — CONCLUSÃO -->
+    <div class="pslide" data-idx="10">
+      <div class="pslide-eyebrow">Resposta ao desafio</div>
+      <h2 class="pslide-title">O mercado existe. A questão é como capturá-lo.</h2>
+      <div class="pslide-body">
+        <div class="pres-checklist">
+          <div class="pres-check-item"><span class="ic">✔</span> Mercado estimado para 2026: <strong>395.933 empresas</strong></div>
+          <div class="pres-check-item"><span class="ic">✔</span> Meta de 20%: <strong>79.186 vendas necessárias</strong></div>
+          <div class="pres-check-item"><span class="ic">✔</span> 4 canais de aquisição priorizados, do dado até a execução</div>
+        </div>
+        <p class="pres-closing-line">Os dados mostram que existe mercado para chegar aos 20%. O resultado vai depender menos da precisão da previsão e mais da capacidade de transformar essa demanda em clientes.</p>
+        <div class="pres-thanks">Obrigado.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pres-bottombar">
+    <button class="pres-arrow" id="presPrev" title="Anterior">‹</button>
+    <div class="pres-dots" id="presDots"></div>
+    <button class="pres-arrow" id="presNext" title="Próximo">›</button>
+  </div>
+</div>
 
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────
@@ -756,7 +1143,7 @@ new Chart(document.getElementById('chartMS'), {
   }
 });
 
-// ── VOLATILITY BARS ───────────────────────────────────────────────────────
+// ── VOLATILITY BARS (dashboard) ─────────────────────────────────────────
 function renderVolBars(containerId, data) {
   const max = Math.max(...data.map(d => d.cv));
   const container = document.getElementById(containerId);
@@ -774,6 +1161,158 @@ function renderVolBars(containerId, data) {
 }
 renderVolBars('volCidade', volCidade);
 renderVolBars('volSegmento', volSegmento);
+
+// ════════════════════════════════════════════════════════════════════════
+// MODO APRESENTAÇÃO
+// ════════════════════════════════════════════════════════════════════════
+(function(){
+  const overlay   = document.getElementById('pres-overlay');
+  const slides    = Array.from(document.querySelectorAll('.pslide'));
+  const dotsWrap  = document.getElementById('presDots');
+  const counterEl = document.getElementById('presCounter');
+  const progress  = document.getElementById('presProgress');
+  const btnPrev   = document.getElementById('presPrev');
+  const btnNext   = document.getElementById('presNext');
+  const btnExit   = document.getElementById('presExit');
+  const btnOpen   = document.getElementById('btnApresentar');
+
+  let current = 0;
+  let chartsReady = false;
+
+  // build nav dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'pres-dot';
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function update() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    counterEl.textContent = String(current + 1).padStart(2, '0') + ' / ' + slides.length;
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === slides.length - 1;
+    if (current === 4) animateCount('presNum5', 395933);
+    if (current === 7) animateCount('presNum8', 79186);
+  }
+
+  function goTo(i) { current = Math.max(0, Math.min(slides.length - 1, i)); update(); }
+  function next() { if (current < slides.length - 1) goTo(current + 1); }
+  function prev() { if (current > 0) goTo(current - 1); }
+
+  function openPresentation() {
+    overlay.classList.add('open');
+    document.body.classList.add('pres-lock');
+    current = 0;
+    update();
+    if (!chartsReady) { initPresCharts(); renderPresVolBars(); chartsReady = true; }
+  }
+  function closePresentation() {
+    overlay.classList.remove('open');
+    document.body.classList.remove('pres-lock');
+  }
+
+  btnOpen.addEventListener('click', openPresentation);
+  btnExit.addEventListener('click', closePresentation);
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  document.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Escape') closePresentation();
+  });
+
+  function animateCount(elId, target) {
+    const el = document.getElementById(elId);
+    if (!el || el.dataset.done) return;
+    el.dataset.done = '1';
+    const dur = 1500, start = performance.now();
+    function step(now) {
+      const p = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('pt-BR');
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function darkChartOpts(extra) {
+    return Object.assign({
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: 'rgba(255,255,255,.6)' } } },
+      scales: {
+        y: { grid: { color: 'rgba(255,255,255,.08)' }, ticks: { color: 'rgba(255,255,255,.5)' } },
+        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,.5)' } }
+      }
+    }, extra || {});
+  }
+
+  function initPresCharts() {
+    new Chart(document.getElementById('pChartAnual'), {
+      type: 'bar',
+      data: {
+        labels: annualYears.map(y => y === 2026 ? '2026 (proj.)' : String(y)),
+        datasets: [{
+          data: annualVals,
+          backgroundColor: annualYears.map(y => y === 2026 ? TEAL : 'rgba(255,255,255,.18)'),
+          borderColor: annualYears.map(y => y === 2026 ? TEAL : 'rgba(255,255,255,.35)'),
+          borderWidth: 1.5, borderRadius: 6,
+        }]
+      },
+      options: darkChartOpts({
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString('pt-BR')} empresas` } }
+        },
+        scales: {
+          y: { grid: { color: 'rgba(255,255,255,.08)' }, ticks: { color: 'rgba(255,255,255,.5)', callback: v => (v/1000).toFixed(0)+'k' } },
+          x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,.5)' } }
+        }
+      })
+    });
+
+    new Chart(document.getElementById('pChartMensal'), {
+      type: 'bar',
+      data: {
+        labels: meses,
+        datasets: [
+          { label: '2025', data: real2025, backgroundColor: 'rgba(255,255,255,.15)', borderRadius: 4 },
+          { label: '2026', data: proj2026, backgroundColor: TEAL, borderRadius: 4 }
+        ]
+      },
+      options: darkChartOpts({
+        plugins: {
+          legend: { position: 'top', labels: { color: 'rgba(255,255,255,.6)', boxWidth: 12 } },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw.toLocaleString('pt-BR')}` } }
+        },
+        scales: {
+          y: { grid: { color: 'rgba(255,255,255,.08)' }, ticks: { color: 'rgba(255,255,255,.5)', callback: v => (v/1000).toFixed(0)+'k' } },
+          x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,.5)' } }
+        }
+      })
+    });
+  }
+
+  function renderPresVolBars() {
+    function render(containerId, data) {
+      const max = Math.max(...data.map(d => d.cv));
+      document.getElementById(containerId).innerHTML = data.map(d => `
+        <div class="pres-vol-row">
+          <div class="pres-vol-label"><span>${d.label}</span><span style="color:${d.color}">${d.cv.toFixed(1)}%</span></div>
+          <div class="pres-vol-track"><div class="pres-vol-fill" style="width:${(d.cv/max*100).toFixed(1)}%;background:${d.color}"></div></div>
+        </div>`).join('');
+    }
+    render('presVolCidade', volCidade.slice(0, 4));
+    render('presVolSegmento', volSegmento.slice(0, 4));
+  }
+
+  update();
+})();
 </script>
 </body>
 </html>
