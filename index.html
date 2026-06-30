@@ -1252,6 +1252,78 @@ renderVolBars('volSegmento', volSegmento);
     }, extra || {});
   }
 
+  // helper: rounded rect (compat fallback for ctx.roundRect)
+  function rr(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  // plugin: value label above each bar (e.g. "396k")
+  const barValueLabelsPlugin = {
+    id: 'barValueLabels',
+    afterDatasetsDraw(chart) {
+      const { ctx } = chart;
+      chart.data.datasets.forEach((dataset, di) => {
+        chart.getDatasetMeta(di).data.forEach((bar, i) => {
+          const value = dataset.data[i];
+          ctx.save();
+          ctx.fillStyle = 'rgba(255,255,255,.78)';
+          ctx.font = '600 11px Inter';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText((value / 1000).toFixed(0) + 'k', bar.x, bar.y - 6);
+          ctx.restore();
+        });
+      });
+    }
+  };
+
+  // plugin: "+18,1%" growth badge connecting the last two bars
+  const growthBadgePlugin = {
+    id: 'growthBadge',
+    afterDatasetsDraw(chart) {
+      if (chart.canvas.id !== 'pChartAnual') return;
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      const prev = meta.data[meta.data.length - 2]; // 2025 bar
+      const last = meta.data[meta.data.length - 1]; // 2026 bar
+      if (!prev || !last) return;
+
+      const lineY = Math.min(prev.y, last.y) - 26;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0,168,120,.55)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(prev.x, lineY);
+      ctx.lineTo(last.x, lineY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const label = '+18,1% vs 2025';
+      ctx.font = '700 12px Inter';
+      const tw = ctx.measureText(label).width;
+      const midX = (prev.x + last.x) / 2;
+      const badgeW = tw + 20, badgeH = 24;
+      const badgeY = lineY - badgeH / 2;
+
+      rr(ctx, midX - badgeW / 2, badgeY, badgeW, badgeH, 12);
+      ctx.fillStyle = '#00A878';
+      ctx.fill();
+
+      ctx.fillStyle = '#0D1825';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, midX, badgeY + badgeH / 2 + 1);
+      ctx.restore();
+    }
+  };
+
   function initPresCharts() {
     new Chart(document.getElementById('pChartAnual'), {
       type: 'bar',
@@ -1264,13 +1336,19 @@ renderVolBars('volSegmento', volSegmento);
           borderWidth: 1.5, borderRadius: 6,
         }]
       },
+      plugins: [barValueLabelsPlugin, growthBadgePlugin],
       options: darkChartOpts({
+        layout: { padding: { top: 64 } },
         plugins: {
           legend: { display: false },
           tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString('pt-BR')} empresas` } }
         },
         scales: {
-          y: { grid: { color: 'rgba(255,255,255,.08)' }, ticks: { color: 'rgba(255,255,255,.5)', callback: v => (v/1000).toFixed(0)+'k' } },
+          y: {
+            suggestedMax: 460000,
+            grid: { color: 'rgba(255,255,255,.08)' },
+            ticks: { color: 'rgba(255,255,255,.5)', callback: v => (v / 1000).toFixed(0) + 'k' }
+          },
           x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,.5)' } }
         }
       })
