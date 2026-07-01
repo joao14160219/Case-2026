@@ -844,10 +844,35 @@
       <p class="pslide-takeaway" style="margin-top:1.6rem">Esses 79 mil não são só números numa planilha. São empreendedores tomando uma decisão importante — e a Contabilizei pode estar do lado deles nesse momento.</p>
     </div>
 
-    <!-- SLIDE 9 — COMO CHEGAR LÁ -->
+    <!-- SLIDE 9 — O DESAFIO EM ESCALA NACIONAL -->
     <div class="pslide" data-idx="8">
+      <div class="pslide-eyebrow">Colocando em perspectiva</div>
+      <h2 class="pslide-title">79 mil vendas: isso é muito ou pouco?</h2>
+      <p class="pslide-takeaway">Em 2025, o Brasil bateu recorde: <strong style="color:#fff">5,1 milhões</strong> de empresas abertas no país inteiro, alta de 18,6% sobre 2024 — o maior volume já registrado. <em>(Fonte: Sistema FENACON)</em></p>
+      <div class="pslide-body">
+        <div class="pres-stat-row">
+          <div class="pres-stat-card">
+            <div class="pres-stat-val">5,1 mi</div>
+            <div class="pres-stat-label">Brasil inteiro · 2025</div>
+          </div>
+          <div class="pres-stat-arrow">→</div>
+          <div class="pres-stat-card">
+            <div class="pres-stat-val teal">79.186</div>
+            <div class="pres-stat-label">Meta da Contabilizei</div>
+          </div>
+        </div>
+        <div class="pres-chips">
+          <span class="pres-chip up">Isso é só 1,55% de tudo que se abre no Brasil</span>
+        </div>
+        <p class="pslide-takeaway" style="margin-top:1.4rem">A meta de 20% é grande dentro do nosso recorte de mercado — mas é uma fatia pequena perto do país inteiro. Isso mostra que o objetivo é ambicioso e, ao mesmo tempo, realista.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 10 — COMO CHEGAR LÁ -->
+    <div class="pslide" data-idx="9">
       <div class="pslide-eyebrow">Como chegar lá</div>
       <h2 class="pslide-title">O plano de aquisição</h2>
+
       <p class="pslide-takeaway">Olhando os segmentos em crescimento, as cidades menos exploradas e a sazonalidade do mercado, encontrei quatro frentes prioritárias.</p>
       <div class="pslide-body">
         <div class="pres-channel-grid">
@@ -875,8 +900,8 @@
       </div>
     </div>
 
-    <!-- SLIDE 10 — PRIORIZAÇÃO -->
-    <div class="pslide" data-idx="9">
+    <!-- SLIDE 11 — PRIORIZAÇÃO -->
+    <div class="pslide" data-idx="10">
       <div class="pslide-eyebrow">Priorização</div>
       <h2 class="pslide-title">Onde investir primeiro</h2>
       <div class="pslide-body">
@@ -894,8 +919,8 @@
       </div>
     </div>
 
-    <!-- SLIDE 11 — CONCLUSÃO -->
-    <div class="pslide" data-idx="10">
+    <!-- SLIDE 12 — CONCLUSÃO -->
+    <div class="pslide" data-idx="11">
       <div class="pslide-eyebrow">Resposta ao desafio</div>
       <h2 class="pslide-title">O mercado existe. A questão é como capturá-lo.</h2>
       <div class="pslide-body">
@@ -1385,8 +1410,8 @@ renderVolBars('volSegmento', volSegmento);
           <div class="pres-vol-track"><div class="pres-vol-fill" style="width:${(d.cv/max*100).toFixed(1)}%;background:${d.color}"></div></div>
         </div>`).join('');
     }
-    render('presVolCidade', volCidade.slice(0, 4));
-    render('presVolSegmento', volSegmento.slice(0, 4));
+    render('presVolCidade', [...volCidade].sort((a, b) => b.cv - a.cv).slice(0, 4));
+    render('presVolSegmento', [...volSegmento].sort((a, b) => b.cv - a.cv).slice(0, 4));
   }
 
   update();
